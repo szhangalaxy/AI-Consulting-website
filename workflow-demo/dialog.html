@@ -1,0 +1,22 @@
+  <dialog class="example-dialog workflow-lab" id="example-dialog" aria-labelledby="example-heading" aria-describedby="workflow-disclaimer">
+    <div class="wf-header">
+      <div class="dialog-header"><h2 id="example-heading">See the work move.</h2><button class="icon-button" data-close aria-label="Close example">✕</button></div>
+      <p id="workflow-disclaimer">Fictional data. No live AI or external actions.</p>
+      <div class="demo-tabs" role="tablist" aria-label="Example workflows">
+        <button id="tab-enquiries" role="tab" aria-selected="true" aria-controls="demo-panel" data-example="enquiries">Enquiries</button>
+        <button id="tab-documents" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" data-example="documents">Documents</button>
+        <button id="tab-reports" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" data-example="reports">Reporting</button>
+      </div>
+    </div>
+    <div class="wf-scroll">
+      <div id="demo-panel" role="tabpanel" aria-labelledby="tab-enquiries" tabindex="0">
+        <div class="wf-brief"><p class="eyebrow" id="wf-context"></p><h3 id="demo-title"></h3><p id="wf-problem"></p></div>
+        <div class="wf-scenarios" role="group" aria-label="Choose sample scenario"><span>Try a scenario</span><div><button type="button" data-scenario="complete" aria-pressed="true">Complete details</button><button type="button" data-scenario="exception" aria-pressed="false">Missing details</button></div></div>
+        <div class="wf-workspace"><section class="wf-source" aria-labelledby="wf-source-title"><div class="wf-panel-heading"><h4 id="wf-source-title">Source information</h4><span>Sample</span></div><details class="wf-source-details" open><summary>Inspect sample source records</summary><div id="wf-source-body"></div></details></section><section class="wf-prepared" aria-labelledby="wf-prepared-title"><div class="wf-panel-heading"><h4 id="wf-prepared-title">Prepared for review</h4><span id="wf-review-badge" class="wf-badge"></span></div><div id="wf-prepared-body"></div></section></div>
+        <section id="wf-result" class="wf-result" tabindex="-1" aria-labelledby="wf-result-title"><div class="wf-result-heading"><p class="eyebrow">Destination · simulated</p><h4 id="wf-result-title">What happens next</h4></div><div id="wf-result-body"></div></section>
+        <details class="wf-audit"><summary>What we would assess before building</summary><p id="wf-audit-copy"></p></details>
+        <p class="wf-measure"><strong>What we’d measure:</strong> <span id="demo-measure"></span></p>
+      </div>
+    </div>
+    <div class="wf-footer"><p id="sample-status" role="status" aria-live="polite" aria-atomic="true"></p><div class="wf-actions"><button class="text-link" id="sample-reset" type="button">Reset</button><button class="button button-dark" id="sample-approve" type="button">Preview follow-up task</button></div></div>
+  </dialog>
