@@ -1,21 +1,22 @@
-# Alternate workflow explorer
+# Canonical workflow explorer
 
-`../workflow-demo.html` is the standalone deliverable. It retains the approved homepage but replaces the three text-based samples with richer deterministic interactions. `index.html`, `preview.html` and their source files remain unchanged by this variant.
+The user approved promoting this explorer to the default website on 12 November 2026. `../index.html` is the canonical deliverable. `../preview.html` and `../workflow-demo.html` are byte-identical compatibility aliases, not separate variants. The previous simpler site is frozen in `../archive/simple-workflows-2026-11-12.html`.
 
 ## Sources and build
 
 - `dialog.html`: accessible native dialog, keyboard tabs, scenario choices, source/prepared/destination panels and persistent review controls.
 - `styles.css`: scoped responsive styles, inheriting the existing green/lime palette and local Inter font.
 - `workflows.js`: sample data, calculations, review/exception paths and source-field highlighting.
-- `../scripts/build-workflow-demo.mjs`: composes the main homepage, swaps only the sample dialog/behaviour, and embeds all resources. Uses `apply_patch` to write only the alternate output. Stop and review if its expected source boundaries change.
+- `../scripts/build-preview.mjs`: one canonical build composing the homepage, this richer dialog and shared behavior, with embedded resources. Uses `apply_patch` to refresh all three entry aliases. Stop and review if expected source boundaries change.
+- `../scripts/build-workflow-demo.mjs`: compatibility wrapper for the canonical build; it cannot regenerate an older variant.
 
 Run from the repository root:
 
 ```sh
-node scripts/build-workflow-demo.mjs --apply
-node scripts/build-workflow-demo.mjs --check
-node --test scripts/build-preview.test.mjs scripts/build-workflow-demo.test.mjs
-node scripts/check-workflow-demo.cjs
+node scripts/build-preview.mjs --apply
+node scripts/build-preview.mjs --check
+node --test scripts/build-preview.test.mjs scripts/build-workflow-demo.test.mjs scripts/build-logo-comparison.test.mjs
+node scripts/check-workflow-demo.cjs index.html
 node scripts/check-preview.cjs
 node scripts/check-polish.cjs
 ```
@@ -33,6 +34,6 @@ Invoice arithmetic: 12 × AUD 40 = AUD 480 subtotal; 10% GST = AUD 48; total = A
 
 All names, records, documents and figures are fictional. No real AI, email, CRM, accounting, payment or reporting connection is made. State stays in the page and resets when switching scenarios or reopening the explorer. The existing contact action still prepares a local brief; it does not submit an enquiry.
 
-The polished explorer keeps reading/record text at 14px and secondary text at least 12px. Mobile uses a compact header and shorter introductions, with prepared work before the source disclosure. Source and prepared panels move in the DOM to keep reading/keyboard order consistent with the responsive layout. Resizing does not reset a chosen scenario or result. The polish check also verifies aligned desktop service links/deliverable rows in both delivered variants, mobile font sizes, short-screen visibility and preserved simulation state.
+The polished explorer keeps reading/record text at 14px and secondary text at least 12px. Mobile uses a compact header and shorter introductions, with prepared work before the source disclosure. Source and prepared panels move in the DOM to keep reading/keyboard order consistent with the responsive layout. Resizing does not reset a chosen scenario or result. The polish check verifies desktop service links/deliverable alignment, mobile font sizes, short-screen visibility and preserved simulation state. All entry aliases now expose this same experience.
 
-Browser evidence is saved under `/workspace/reviews/workflow-demo/`. The browser check loads the exact delivered HTML in an isolated, offline document, tests all six paths, source highlighting, resets, tabs/Escape/focus, mobile controls and overflow, plus shared contact/menu/policy actions. Axe checks run when the existing audit helper is available; these are bounded checks, not accessibility certification.
+Browser evidence is saved under `/workspace/reviews/canonical-workflows/`, separated by entry filename. The browser check defaults to the actual `index.html`; pass `preview.html` or `workflow-demo.html` to check those aliases explicitly. It tests all six paths, source highlighting, resets, tabs/Escape/focus, mobile controls and overflow, plus shared contact/menu/policy actions in isolated offline HTML. Axe checks run when the existing audit helper is available; these are bounded checks, not accessibility certification.

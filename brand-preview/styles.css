@@ -1,0 +1,26 @@
+.logo-review-bar{background:var(--sage);border-bottom:1px solid var(--line)}
+.logo-review-inner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:12px;font-size:14px}
+.logo-review-inner p{margin:0;margin-right:auto}
+.logo-review-controls{display:flex;gap:8px}
+.logo-review-controls button{min-height:44px;min-width:104px;padding:9px 18px;border:1px solid #65785e;border-radius:4px;background:transparent;font-weight:500}
+.logo-review-controls button[aria-pressed="true"]{background:var(--forest);border-color:var(--forest);color:var(--paper)}
+.logo-review-link{text-decoration:underline;text-underline-offset:4px;padding-block:10px}
+.logo-review-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.wordmark.logo-wordmark{display:flex;align-items:center;min-height:48px;line-height:1;letter-spacing:0}
+.brand-art{display:block;position:relative;overflow:hidden;width:196px;aspect-ratio:4;flex-shrink:0}
+.brand-art img{position:absolute;width:var(--art-width);left:var(--art-left);top:var(--art-top);max-width:none;height:auto;display:block}
+.brand-reverse img{filter:brightness(0) invert(1)}
+.logo-specimens{padding-block:64px;border-top:1px solid var(--line);background:var(--cream)}
+.logo-specimens h2{font-size:30px;line-height:1.25;letter-spacing:-1px;margin:0 0 12px}
+.logo-specimens p{max-width:700px;font-size:16px;margin:0 0 26px;color:var(--muted)}
+.logo-specimen-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.logo-specimen{padding:28px;background:var(--paper)}
+.logo-specimen-dark{background:var(--forest);color:var(--paper)}
+.logo-specimen h3{font-size:14px;line-height:1.5;font-weight:500;margin:0 0 28px}
+.logo-icon-sizes{display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap;margin-top:28px}
+.logo-icon-sizes figure{display:flex;flex-direction:column;align-items:center;gap:12px;margin:0}
+.logo-icon-sizes img{display:block;flex-shrink:0}
+.logo-icon-sizes figcaption{font-size:12px;line-height:1.4}
+.logo-specimens .logo-limits{margin:24px 0 0;font-size:14px}
+@media(max-width:900px){.brand-art{width:176px}.logo-review-inner{gap:12px}.logo-icon-sizes{gap:20px}}
+@media(max-width:700px){.brand-art{width:172px}.logo-review-inner{gap:10px}.logo-review-inner p{flex-basis:100%}.logo-review-safety{display:none}.logo-review-controls{flex:1}.logo-review-controls button{flex:1;min-width:0}.logo-review-link{font-size:13px}.logo-specimens{padding-block:40px}.logo-specimens h2{font-size:26px}.logo-specimen-grid{grid-template-columns:1fr;gap:16px}.logo-specimen{padding:24px}.logo-icon-sizes{gap:24px}}

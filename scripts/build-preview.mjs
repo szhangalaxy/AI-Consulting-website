@@ -4,8 +4,8 @@ import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-export const targets = ['index.html', 'preview.html'];
-const marker = '<!-- Generated self-contained website. Edit app.html, styles.css, or script.js, then regenerate. -->';
+export const targets = ['index.html', 'preview.html', 'workflow-demo.html'];
+export const websiteMarker = '<!-- Generated self-contained website. Edit app.html, styles.css, script.js or workflow-demo/, then run scripts/build-preview.mjs --apply. -->';
 const mimeTypes = { '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.webp': 'image/webp', '.png': 'image/png' };
 
 function inlineAsset(path) {
@@ -32,14 +32,14 @@ export function assertSelfContained(html) {
   }
 }
 
-export function buildDocument() {
+function buildBaseDocument() {
   let html = readFileSync(resolve(root, 'app.html'), 'utf8');
   const css = readFileSync(resolve(root, 'styles.css'), 'utf8').replace(
     /url\(['"]?([^'"\)]+)['"]?\)/g,
     (_, path) => "url('" + inlineAsset(path) + "')"
   );
   const javascript = readFileSync(resolve(root, 'script.js'), 'utf8');
-  html = html.replace('<!doctype html>', '<!doctype html>\n' + marker);
+  html = html.replace('<!doctype html>', '<!doctype html>\n' + websiteMarker);
   html = html.replace(/\s*<link\b[^>]*rel="preload"[^>]*>/g, '');
   html = html.replace('<link rel="stylesheet" href="styles.css">', '<style>\n' + css + '\n</style>');
   html = html.replace(/\s*<script src="script.js" defer><\/script>/, '');
@@ -54,6 +54,31 @@ export function buildDocument() {
   return html;
 }
 
+// The richer explorer is the canonical website, not an optional variant.
+// Keep this composition in the one build used by every public entry alias.
+export function buildDocument() {
+  let html = buildBaseDocument();
+  const source = name => readFileSync(resolve(root, 'workflow-demo', name), 'utf8');
+  const sharedScript = readFileSync(resolve(root, 'script.js'), 'utf8');
+  const boundary = sharedScript.indexOf('const menuToggle =');
+  if (boundary < 0 || boundary !== sharedScript.lastIndexOf('const menuToggle =')) throw new Error('Shared script boundary changed; review workflow integration.');
+  const dialogPattern = /  <dialog class="example-dialog"[\s\S]*?<\/dialog>/g;
+  if ([...html.matchAll(dialogPattern)].length !== 1) throw new Error('Expected exactly one base workflow dialog.');
+  html = html.replace(dialogPattern, () => source('dialog.html').trimEnd());
+  html = html.replace('</head>', '<style>\n' + source('styles.css') + '\n</style>\n</head>');
+  const sharedActions = sharedScript.slice(boundary).replace('dialog.showModal();', `dialog.showModal();
+  if (id === 'example-dialog') {
+    dialog.querySelector('[data-close]').focus({ preventScroll: true });
+    dialog.querySelector('.wf-scroll').scrollTop = 0;
+  }`);
+  const javascript = source('workflows.js') + '\n' + sharedActions;
+  html = html.replace(/<script>[\s\S]*?<\/script>/, () => '<script>\n' + javascript.replace(/<\/script/gi, '<\\/script') + '\n</script>');
+  html = html.replace('>Explore an example</button>', '>Try a workflow</button>');
+  html = html.replaceAll('>Explore the example <img', '>Try the workflow <img');
+  assertSelfContained(html);
+  return html;
+}
+
 function main() {
   const html = buildDocument();
   if (process.argv.includes('--check')) {
@@ -64,7 +89,7 @@ function main() {
       }
       assertSelfContained(readFileSync(path, 'utf8'));
     }
-    process.stdout.write('PASS: index.html and preview.html are current, identical, and self-contained.\n');
+    process.stdout.write('PASS: index.html, preview.html and workflow-demo.html are current, identical, self-contained richer-workflow entries.\n');
   } else if (process.argv.includes('--patch') || process.argv.includes('--apply')) {
     const template = readFileSync(resolve(root, 'app.html'), 'utf8');
     const operations = [];
@@ -73,7 +98,8 @@ function main() {
       const path = resolve(root, name);
       const previous = existsSync(path) ? readFileSync(path, 'utf8') : null;
       // Permit the initial index migration only when its contents match app.html.
-      if (previous && !previous.includes('<!-- Generated self-contained') && previous !== template) {
+      const legacyAlias = name === 'workflow-demo.html' && previous?.includes('<!-- Alternate workflow demo.');
+      if (previous && !previous.includes('<!-- Generated self-contained') && !legacyAlias && previous !== template) {
         throw new Error('Refusing to overwrite an unrelated ' + name);
       }
       if (previous === html) continue;

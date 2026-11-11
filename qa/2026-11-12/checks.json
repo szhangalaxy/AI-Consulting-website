@@ -1,0 +1,114 @@
+{
+  "result": "passed",
+  "date": "2026-11-12",
+  "timezone": "Australia/Sydney",
+  "artifact": "index.html",
+  "isolated": true,
+  "offline": true,
+  "desktopViewport": [
+    1440,
+    1000
+  ],
+  "mobileViewport": [
+    390,
+    844
+  ],
+  "semantics": {
+    "duplicateIds": [],
+    "missingReferences": [],
+    "h1s": 1,
+    "brokenAnchors": []
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "Desktop homepage, branding and navigation",
+      "screenshot": "01-home-desktop.png",
+      "result": "passed"
+    },
+    {
+      "step": 2,
+      "name": "enquiries: complete result and human-review boundary",
+      "screenshot": "02-enquiries-complete.png",
+      "result": "passed"
+    },
+    {
+      "step": 3,
+      "name": "enquiries: exception result and human-review boundary",
+      "screenshot": "03-enquiries-exception.png",
+      "result": "passed"
+    },
+    {
+      "step": 4,
+      "name": "documents: complete result and human-review boundary",
+      "screenshot": "04-documents-complete.png",
+      "result": "passed"
+    },
+    {
+      "step": 5,
+      "name": "documents: exception result and human-review boundary",
+      "screenshot": "05-documents-exception.png",
+      "result": "passed"
+    },
+    {
+      "step": 6,
+      "name": "reports: complete result and human-review boundary",
+      "screenshot": "06-reports-complete.png",
+      "result": "passed"
+    },
+    {
+      "step": 7,
+      "name": "reports: exception result and human-review boundary",
+      "screenshot": "07-reports-exception.png",
+      "result": "passed"
+    },
+    {
+      "step": 8,
+      "name": "Approach copy, scope and readable deliverables",
+      "screenshot": "08-approach.png",
+      "result": "passed"
+    },
+    {
+      "step": 9,
+      "name": "Mobile homepage and Converge identity",
+      "screenshot": "09-home-mobile.png",
+      "result": "passed"
+    },
+    {
+      "step": 10,
+      "name": "Mobile navigation expanded",
+      "screenshot": "10-menu-mobile.png",
+      "result": "passed"
+    },
+    {
+      "step": 11,
+      "name": "Mobile reporting exception, prepared-first layout",
+      "screenshot": "11-workflow-mobile.png",
+      "result": "passed"
+    },
+    {
+      "step": 12,
+      "name": "Contact fields, validation and explicit local-only notice",
+      "screenshot": "12-contact-mobile.png",
+      "result": "passed"
+    },
+    {
+      "step": 13,
+      "name": "Prepared local brief, no submission claim",
+      "screenshot": "13-contact-prepared.png",
+      "result": "passed"
+    },
+    {
+      "step": 14,
+      "name": "Preview privacy notice",
+      "screenshot": "14-privacy-mobile.png",
+      "result": "passed"
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "limits": [
+    "No axe package available; not full accessibility certification.",
+    "Contact is a local brief composer; live enquiry delivery and final legal policies remain launch gaps."
+  ]
+}

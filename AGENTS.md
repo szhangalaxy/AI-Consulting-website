@@ -6,7 +6,7 @@ This repository contains a responsive, dependency-free prototype homepage for an
 
 - `index.html` is the complete application: markup, styles, and client-side behavior.
 - `README.md` documents the prototype, research context, launch gaps, and preview instructions.
-- The temporary brand name is `[Company Name]`.
+- The approved business name is Noviqa; the selected logo direction is Converge.
 - The site is a local prototype, not a production booking or data-collection service.
 
 ## Working principles
@@ -57,15 +57,16 @@ This file is project-scoped memory for future coding agents. Read it before chan
 
 The user reviews the website in a file visualization panel. That panel may load only the selected HTML document, without neighboring CSS, scripts, fonts or images. A modular `index.html` repeatedly appeared unstyled with broken images. Creating a separate `preview.html` did not prevent the user from reopening `index.html` and hitting the same failure.
 
-- Keep **both `index.html` and `preview.html` self-contained and identical**. Embed CSS, JavaScript, fonts, icons, favicon and illustration. Neither file may require adjacent files, a server, a CDN, or a `<base>` URL to render.
-- Edit **`app.html`**, `styles.css`, `script.js`, and `assets/` as the source. `app.html` is a source template, not the file to hand to the user. Do not replace the generated `index.html` with the modular template.
-- After every source change, regenerate both delivered files with `node scripts/build-preview.mjs --apply`. This uses `apply_patch` and safely does nothing when already current. `--patch` remains available to emit a patch for other tooling.
+- **On 12 November 2026 the user approved promoting the richer workflow website to the default.** Keep **`index.html`, `preview.html` and `workflow-demo.html` self-contained and byte-identical**. All three now include the full richer explorer and selected Converge branding. `index.html` is the canonical handoff; the other two are compatibility aliases, not different variants. Embed CSS, JavaScript, fonts, icons, favicon and illustration. No neighboring files, server, CDN or `<base>` URL may be required to render.
+- Edit **`app.html`**, `styles.css`, `script.js`, `workflow-demo/` and `assets/` as source. `workflow-demo/dialog.html`, `styles.css` and `workflows.js` own the live explorer. `script.js` supplies shared menu/contact/policy behavior from its `const menuToggle =` boundary; its older sample definitions and the base template's old dialog are not the shipped explorer. Do not edit those older samples expecting to change the live workflows. `app.html` is a modular template, not a handoff document.
+- After every source change, regenerate all three entry files with `node scripts/build-preview.mjs --apply`. This single canonical build always composes the richer explorer; it cannot emit the simpler variant through its public API/CLI. `scripts/build-workflow-demo.mjs` is only a compatibility wrapper delegating to the same build, including on `--apply`. `--patch` remains supported.
 - Run `node scripts/build-preview.mjs --check` to reject stale output or relative resource references.
 - Run `node --test scripts/build-preview.test.mjs` and `node scripts/check-preview.cjs` before handoff. The browser check uses the cloud environment's preinstalled Playwright and Chromium; it is a development check, not an application dependency.
 - The browser check must load the actual **`index.html` contents in an isolated document with networking disabled**, inspect stylesheet/font/image loading, and exercise the demos and main brief action. A healthy localhost server does not establish that the file visualization works.
 - Inspect the generated screenshots. Test desktop and mobile. Report any viewer-specific script/CSP limitation honestly if observed; never describe a queued panel request as a successfully visible preview.
 - Link the user to `index.html` as the canonical artifact. `preview.html` remains a compatible alias so older links keep working.
-- The user also requested a separate richer-demo version: `workflow-demo.html`, built from `workflow-demo/` with `node scripts/build-workflow-demo.mjs --apply`. Keep this alternate self-contained too; do not promote it over or overwrite the original without approval. Check it with `--check`, `node --test scripts/build-workflow-demo.test.mjs` and `node scripts/check-workflow-demo.cjs`. If shared homepage sources change, regenerate and test the alternate as well.
+- Run `node --test scripts/build-preview.test.mjs scripts/build-workflow-demo.test.mjs scripts/build-logo-comparison.test.mjs`, then `node scripts/check-workflow-demo.cjs index.html` (all six scenarios and responsive states). The browser command can also test `preview.html` and `workflow-demo.html` explicitly. Run `node scripts/check-polish.cjs` for mobile readability and alignment.
+- Preserve `archive/simple-workflows-2026-11-12.html` as a **frozen exact snapshot** of the simpler pre-promotion site. Do not regenerate or use it as the current website. Its SHA-256 is pinned in the tests and archive README. Do not restore the simpler explorer to index/preview; the earlier separate-variant rule is superseded by the user's promotion approval.
 
 ## Product and copy decisions to preserve
 
@@ -85,6 +86,10 @@ The user reviews the website in a file visualization panel. That panel may load 
 - Contact is currently a clearly labelled local brief composer. It does not submit enquiries. A real contact/booking route and reviewed policies are still required before launch.
 
 ## Workflow and state
+
+- Approved business facts: the name is **Noviqa**, domain `noviqa.com.au`, receiving business inbox `info@noviqa.com.au`. These facts do not establish that hosting or enquiry delivery is configured. The user says the site is only in GitHub; a Formspree endpoint and live delivery validation are still pending. Do not invent the endpoint or label the local brief composer as sending.
+- The user **selected Converge** (four mirrored double-elbow modules) after website testing. It is applied to the header, footer and favicon of all three identical website entries through shared `app.html`/`styles.css`. Reuse the exact `assets/brand/converge-lockup.png` and `converge-symbol.png`; do not regenerate, redraw, substitute Current, or revert to placeholder branding. The optical display crop preserves the tested proportions. Name/title/copyright are Noviqa. `node scripts/check-brand.cjs` checks three entry files across seven widths with scripts enabled and disabled and captures source/implementation comparisons.
+- Preserve both **Current** and **Converge** in the separate `logo-comparison.html` as a reference, not a public selector on the main website. Source is `brand-preview/`, `assets/brand/` and `scripts/build-logo-comparison.mjs`; generate with `--apply`, validate with `--check`, `node --test scripts/build-logo-comparison.test.mjs`, and `node scripts/check-logo-comparison.cjs`. This testbed derives from the richer workflow demo, but does not replace any existing entry file. Keep it self-contained. Rebuild after changes to shared homepage sources. Selected raster assets are not vector masters; vector production, optical icon work and similarity/trademark clearance remain separate launch work. Selection does not authorise GitHub pushes or public deployment.
 
 - Use the existing checkout; do not create another worktree unless the user requests one.
 - Preserve unrelated edits. Keep the website dependency-free at runtime.
