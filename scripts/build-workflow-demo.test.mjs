@@ -5,17 +5,17 @@ import { resolve } from 'node:path';
 import { buildDocument, assertSelfContained, root } from './build-preview.mjs';
 import { buildWorkflowDemo, demoTarget } from './build-workflow-demo.mjs';
 
-test('alternate is current, self-contained and does not replace the original', () => {
+test('legacy workflow entry and API are exact aliases of the canonical website', () => {
   const original = readFileSync(resolve(root, 'index.html'), 'utf8');
   const demo = buildWorkflowDemo();
   assert.equal(readFileSync(demoTarget, 'utf8'), demo);
   assertSelfContained(demo);
   assert.equal(original, buildDocument());
   assert.equal(readFileSync(resolve(root, 'index.html'), 'utf8'), original);
-  assert.notEqual(demo, original);
+  assert.equal(demo, original);
 });
 
-test('alternate replaces the old samples, preserves shared actions and initializes once', () => {
+test('canonical explorer preserves shared actions and initializes once', () => {
   const demo = buildWorkflowDemo();
   assert.equal((demo.match(/id="example-dialog"/g) || []).length, 1);
   assert.equal((demo.match(/<script>/g) || []).length, 1);

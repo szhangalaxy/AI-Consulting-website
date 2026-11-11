@@ -2,15 +2,34 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { createHash } from 'node:crypto';
 import { assertSelfContained, buildDocument, root, targets } from './build-preview.mjs';
 
-test('both actual entry files are current, identical, standalone documents', () => {
+test('all three entry files are current, identical, standalone richer-workflow documents', () => {
   const built = buildDocument();
   for (const target of targets) {
     const actual = readFileSync(resolve(root, target), 'utf8');
     assert.equal(actual, built, target + ' has stale content');
     assertSelfContained(actual);
   }
+});
+
+test('canonical build includes the full approved richer workflows', () => {
+  const html = buildDocument();
+  assert.deepEqual(targets, ['index.html', 'preview.html', 'workflow-demo.html']);
+  for (const text of ['class="wf-scroll"', 'data-scenario="complete"', 'data-scenario="exception"', 'Preview follow-up task', 'Preview clarification task', 'Preview entry draft', 'Preview review queue', 'Preview weekly report', 'Preview held report', 'Show in invoice', 'Show invoice total', 'Accepted quotes matched', 'Try a workflow']) assert(html.includes(text), text);
+  assert(!html.includes('const samples ='));
+  assert(!html.includes('wf-rail'));
+  assert(!html.includes('Workflow demo |'));
+});
+
+test('simpler pre-promotion version remains a byte-exact frozen archive', () => {
+  const frozen = readFileSync(resolve(root, 'archive/simple-workflows-2026-11-12.html'));
+  assert.equal(createHash('sha256').update(frozen).digest('hex'), '540c827418d2632d65397e2ec2500324050d748c8c66f7f9269dbecbf876ad29');
+  assertSelfContained(frozen.toString('utf8'));
+  assert(frozen.includes('const samples ='));
+  assert(!frozen.includes('class="wf-scroll"'));
+  assert(!targets.some(name => name.startsWith('archive/')));
 });
 
 test('relative CSS, scripts, icons and images are rejected', () => {
@@ -38,6 +57,19 @@ test('script initialization follows the generated page markup', () => {
   assert.equal((html.match(/<script>/g) || []).length, 1);
   assert(html.indexOf('<script>') > html.indexOf('id="contact-dialog"'));
   assert(!html.includes('<script src='));
+});
+
+test('selected Converge identity is embedded in both main brand placements and favicon', () => {
+  const html = buildDocument();
+  const logo = readFileSync(resolve(root, 'assets/brand/converge-lockup.png')).toString('base64');
+  const symbol = readFileSync(resolve(root, 'assets/brand/converge-symbol.png')).toString('base64');
+  assert.equal(html.split(logo).length - 1, 2);
+  assert(html.includes('href="data:image/png;base64,' + symbol + '" type="image/png"'));
+  assert.equal([...html.matchAll(/aria-label="Noviqa home"/g)].length, 2);
+  assert(html.includes('<title>Noviqa | Less admin. More time for your business.</title>'));
+  assert(!html.includes('[Company Name]'));
+  assert(!html.includes('Current logo'));
+  assert(!html.includes('logo-review-bar'));
 });
 
 test('approved homepage copy makes advisory and build services explicit', () => {

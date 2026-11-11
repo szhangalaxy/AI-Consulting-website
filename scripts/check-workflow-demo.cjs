@@ -4,7 +4,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 const root = path.resolve(__dirname, '..');
-const evidence = path.resolve(root, '..', 'reviews', 'workflow-demo');
+const artifact = process.argv[2] || 'index.html';
+assert(['index.html', 'preview.html', 'workflow-demo.html'].includes(artifact), 'Choose a canonical website entry');
+const evidence = path.resolve(root, '..', 'reviews', 'canonical-workflows', artifact.replace('.html', ''));
 
 (async () => {
   execFileSync(process.execPath, [path.join(__dirname, 'build-workflow-demo.mjs'), '--check'], { stdio: 'inherit' });
@@ -18,7 +20,7 @@ const evidence = path.resolve(root, '..', 'reviews', 'workflow-demo');
     page.on('pageerror', error => errors.push(error.message));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
     page.on('request', request => { if (/^https?:/.test(request.url())) network.push(request.url()); });
-    await page.setContent(fs.readFileSync(path.join(root, 'workflow-demo.html'), 'utf8'), { waitUntil: 'load' });
+    await page.setContent(fs.readFileSync(path.join(root, artifact), 'utf8'), { waitUntil: 'load' });
     await page.addStyleTag({ content: 'html{scroll-behavior:auto!important}' });
     await page.evaluate(() => document.fonts.ready);
     assert.equal(await page.locator('.hero').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(23, 43, 35)');
@@ -129,7 +131,7 @@ const evidence = path.resolve(root, '..', 'reviews', 'workflow-demo');
     assert.deepEqual(errors, [], 'Browser errors');
     assert.deepEqual(network, [], 'External resource requests');
     assert(accessibility.every(item => !item.violations.length), JSON.stringify(accessibility.filter(item => item.violations.length), null, 2));
-    const result = { result: 'passed', artifact: 'workflow-demo.html', isolated: true, networking: 'disabled', scenarios: 6, widths: [1440, 1024, 768, 700, 390, 320], accessibility: accessibility.length ? accessibility : 'axe unavailable', errors, network, screenshots: evidence };
+    const result = { result: 'passed', artifact, isolated: true, networking: 'disabled', scenarios: 6, widths: [1440, 1024, 768, 700, 390, 320], accessibility: accessibility.length ? accessibility : 'axe unavailable', errors, network, screenshots: evidence };
     fs.writeFileSync(path.join(evidence, 'checks.json'), JSON.stringify(result, null, 2));
     console.log(JSON.stringify(result, null, 2));
   } finally { await browser.close(); }
